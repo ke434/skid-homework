@@ -1,4 +1,8 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npx lint-staged
+if [ -x node_modules/.bin/lint-staged ]; then
+  exec node_modules/.bin/lint-staged
+else
+  npx lint-staged
+fi

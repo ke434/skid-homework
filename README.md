@@ -1,7 +1,5 @@
 # 打滑作业平台
 
-![Thumbnail](.github/images/skidhw-thumbnail-new.png)
-
 [ENGLISH README](/README-EN.md)
 
 符合人体工程学设计、人工智能驱动的作业助手
