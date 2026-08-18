@@ -1,16 +1,16 @@
 # Skid-Homework｜A New Paradigm for Efficient Learning
 
+> Rebuild the learning workflow with technology — a lightweight AI-powered cloud platform for homework and mistake management, where every practice becomes a stepping stone for growth.
+
 Visit: **http://111.229.11.169:3000**
 
 [中文 README](/README.md)
 
-> Rebuild the learning workflow with technology — a lightweight AI-powered cloud platform for homework and mistake management, where every practice becomes a stepping stone for growth.
-
 ## About
 
-Skid-Homework is an open-source, AI-powered learning workbench for students and self-learners. No heavy clients — it runs entirely in the browser with zero installation. Sign up and get a one-stop cloud experience covering homework solving, mistake archiving and knowledge review, with mistakes, exercises and solution approaches collected in one place to build your personal digital learning knowledge base.
+Skid-Homework is an open-source, AI-powered learning workbench for students and self-learners. No heavy clients, no installation — just sign up and start. Homework solving, mistake archiving and knowledge review live together in one cloud space, with mistakes, exercises and solution approaches collected in one place to build your personal digital learning knowledge base.
 
-This is not a simple answer engine — it focuses on guiding your thinking. Through intelligent recognition and step-by-step analysis, it clarifies problem-solving logic and pinpoints knowledge gaps, replacing mindless copying and inefficient drilling with a complete learning loop: **spot the problem — analyze the cause — reinforce the knowledge**.
+It is not a simple answer engine — it guides your thinking. Through intelligent recognition and step-by-step analysis, it clarifies problem-solving logic and pinpoints knowledge gaps, replacing mindless copying and inefficient drilling with a complete learning loop: **spot the problem — analyze the cause — reinforce the knowledge**.
 
 ## Highlights
 
@@ -20,9 +20,9 @@ This is not a simple answer engine — it focuses on guiding your thinking. Thro
 
 ✅ **Cloud mistake notebook** — Mistakes are stored in the cloud permanently, retrievable anytime for periodic review to pinpoint weak knowledge points.
 
-✅ **Smooth, ergonomic UX** — Full shortcut system, dark mode, responsive layout; pure browser-based, no telemetry, protecting your learning data privacy.
+✅ **Smooth, ergonomic UX** — Pure browser-based, no telemetry, protecting your learning data privacy; full shortcut system, dark mode and responsive layout across all screens.
 
-✅ **Lightweight open architecture** — Simple, efficient and ready to use out of the box; focused on the essence of a learning tool, no bloat — computing power goes to actual learning.
+✅ **Lightweight open architecture** — Simple, efficient and ready to use out of the box; no bloat — computing power goes to actual learning.
 
 ## Who is it for
 
@@ -33,9 +33,10 @@ This is not a simple answer engine — it focuses on guiding your thinking. Thro
 ## Try it now
 
 🌐 Visit: http://111.229.11.169:3000
-Sign up and start your personal cloud mistake notebook.
 
-> Leave repetition to tools, keep thinking to yourself. Skid-Homework — your cloud AI learning workbench.
+Start your personal cloud mistake notebook — efficient learning begins now.
+
+> Leave repetition to tools, keep thinking to yourself — Skid-Homework, your cloud AI learning workbench.
 
 ## Shortcuts
 
