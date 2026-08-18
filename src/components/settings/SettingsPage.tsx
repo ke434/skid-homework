@@ -113,7 +113,11 @@ export default function SettingsPage() {
     devtoolsEnabled,
     setDevtoolsState,
     clearDialogOnSubmit,
-    setClearDialogOnSubmit
+    setClearDialogOnSubmit,
+    twoStageEnabled,
+    setTwoStageEnabled,
+    fastModelName,
+    setFastModelName
   } = useSettingsStore((s) => s);
 
   const { theme: activeTheme, setTheme } = useTheme();
@@ -510,6 +514,39 @@ export default function SettingsPage() {
                   {t("model.show-selector-in-scanner")}
                 </Label>
               </div>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-start gap-3">
+                <Checkbox
+                  id="two-stage-toggle"
+                  checked={twoStageEnabled}
+                  onCheckedChange={(state) =>
+                    setTwoStageEnabled(Boolean(state))
+                  }
+                />
+                <div className="flex flex-col gap-1">
+                  <Label htmlFor="two-stage-toggle">
+                    {t("model.two-stage.label")}
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    {t("model.two-stage.desc")}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="fast-model-input">
+                {t("model.fast-model.label")}
+              </Label>
+              <Input
+                id="fast-model-input"
+                placeholder={t("model.fast-model.placeholder")}
+                value={fastModelName}
+                onChange={(event) => setFastModelName(event.target.value)}
+              />
+              <p className="text-xs text-muted-foreground">
+                {t("model.fast-model.desc")}
+              </p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="max-retries">

@@ -8,9 +8,12 @@ import ActionsCard from "../actions/ActionsCard";
 import PreviewCard from "../preview/PreviewCard";
 
 import solvePrompt from "@/ai/prompts/solve.prompt.md";
+import segmentPrompt from "@/ai/prompts/segment.prompt.md";
 
 import { uint8ToBase64 } from "@/utils/encoding";
 import { parseSolveResponse } from "@/ai/response";
+import { parseSegmentResponse } from "@/ai/segment";
+import { compressImageForAI } from "@/utils/image-compression";
 
 import {
   type FileItem,
@@ -31,7 +34,7 @@ import OpenCVLoader from "../OpenCVLoader";
 import { getEnabledToolCallingPrompts } from "@/ai/prompts/prompt-manager";
 import { useStoreInitialization } from "@/hooks/use-store-initialization";
 import { isTextMimeType } from "@/utils/file-utils";
-import { isNonRetryableError } from "@/ai/errors";
+import { isNonRetryableError, NonRetryableError } from "@/ai/errors";
 
 export default function ScanPage() {
   const { t } = useTranslation("commons", { keyPrefix: "scan-page" });
@@ -54,9 +57,8 @@ export default function ScanPage() {
   } = useProblemsStore((s) => s);
   const isStoreReady = useStoreInitialization();
 
-  const { imageEnhancement, traits, onlineSearchEnabled } = useSettingsStore(
-    (s) => s
-  );
+  const { imageEnhancement, traits, onlineSearchEnabled, twoStageEnabled, fastModelName } =
+    useSettingsStore((s) => s);
 
   // Zustand store for AI provider configuration.
   const {
@@ -225,8 +227,8 @@ export default function ScanPage() {
     primarySourceId: string,
     fallbackModelName: string | null,
     fallbackSourceIdParam: string | null,
-    maxRetries: number = 5,
-    initialDelayMs: number = 5000
+    maxRetries: number = 2,
+    initialDelayMs: number = 2000
   ): Promise<string> => {
     // Helper function to run a single model's retry loop
     const runWithRetry = async (
@@ -261,7 +263,7 @@ export default function ScanPage() {
               })
             });
             await new Promise((resolve) => setTimeout(resolve, delay));
-            delay *= 2;
+            delay = Math.min(delay * 2, 8000); // Cap backoff so a bad run cannot stall the batch for minutes
           }
         }
       }
@@ -382,7 +384,7 @@ export default function ScanPage() {
     setWorking(true);
 
     try {
-      const concurrency = 4;
+      const concurrency = 2;
       const n = itemsToProcess.length;
 
       const idsToProcess = new Set(itemsToProcess.map((item) => item.id));
@@ -391,19 +393,16 @@ export default function ScanPage() {
       const processOne = async (item: FileItem) => {
         console.log(`Processing ${item.id}`);
 
-        const buf = await item.file.arrayBuffer();
+        // 1. Compress first: full-res photos are the #1 upload bottleneck.
+        // Downscaling to ~1600px JPEG cuts payload 10-50x with no OCR loss.
+        const compressed = await compressImageForAI(item.file);
+        const buf = await compressed.blob.arrayBuffer();
         const base64 = await uint8ToBase64(new Uint8Array(buf));
+        const mimeType = compressed.mimeType;
 
         updateSolution(item.id, {
           status: "processing"
         });
-
-        const aiClient = getClientForSource(activeSource.id);
-        if (!aiClient) {
-          throw new Error(
-            t("errors.missing-key", { provider: activeSource.name })
-          );
-        }
 
         const promptPrompt = activeSource.traits
           ? `\nUser defined prompts:
@@ -421,54 +420,198 @@ ${traits}
 `
           : "";
 
-        aiClient.addSystemPrompt(solvePrompt);
-        aiClient.addSystemPrompt(promptPrompt + traitsPrompt);
+        const solveSystemPrompt = solvePrompt + promptPrompt + traitsPrompt;
 
-        aiClient.setAvailableTools(getEnabledToolCallingPrompts());
+        // Retry wrapper with sane defaults (capped quick retries, no minutes-long backoff)
+        const sendWithRetry = (
+          asyncFn: (model: string, sourceId?: string) => Promise<string>
+        ) =>
+          retryAsyncOperation(
+            asyncFn,
+            activeSource.name,
+            currentModel,
+            activeSource.id,
+            fallbackModel,
+            resolvedFallbackSourceId,
+            Math.min(activeSource.maxRetries ?? 2, 3)
+          );
 
-        clearStreamedOutput(item.id);
-
-        const resText = await retryAsyncOperation(
-          (model, sourceId) => {
-            // Get the appropriate client for the source (supports cross-provider fallback)
-            const client = sourceId ? getClientForSource(sourceId) : aiClient;
+        // Full-page image solve (used by the fallback single-pass path)
+        const sendImage = (
+          systemPromptText: string,
+          userPrompt?: string
+        ) =>
+          sendWithRetry((modelName, sourceId) => {
+            const client = sourceId
+              ? getClientForSource(sourceId)
+              : getClientForSource(activeSource.id);
             if (!client) {
               throw new Error(t("errors.no-client"));
             }
-
-            // Re-apply system prompts for the client
-            client.addSystemPrompt(solvePrompt);
-            client.addSystemPrompt(promptPrompt + traitsPrompt);
+            client.addSystemPrompt(systemPromptText);
             client.setAvailableTools(getEnabledToolCallingPrompts());
-
             return client.sendMedia(
               {
                 data: base64,
-                mimeType: item.mimeType,
+                mimeType,
                 name: item.displayName
               },
-              undefined,
-              model,
+              userPrompt,
+              modelName,
               (text) => appendStreamedOutput(item.id, text),
               { onlineSearch: onlineSearchEnabled }
             );
-          },
-          activeSource.name,
-          currentModel,
-          activeSource.id,
-          fallbackModel,
-          resolvedFallbackSourceId,
-          activeSource.maxRetries ?? 5
-        );
+          });
 
-        const res = parseSolveResponse(resText);
-        if (!res) {
-          throw new Error(t("errors.parsing-failed"));
+        clearStreamedOutput(item.id);
+
+        let problems: ProblemSolution[] = [];
+
+        // --- Stage 1: fast OCR / question segmentation (images only) ---
+        const isImage = item.mimeType.startsWith("image/");
+        let questionTexts: string[] | null = null;
+
+        if (isImage && twoStageEnabled) {
+          try {
+            const ocrModel = fastModelName.trim() || currentModel;
+            const ocrText = await retryAsyncOperation(
+              (model, sourceId) => {
+                const client = sourceId
+                  ? getClientForSource(sourceId)
+                  : getClientForSource(activeSource.id);
+                if (!client) {
+                  throw new Error(t("errors.no-client"));
+                }
+                // Keep the OCR prompt minimal and fast: no tools, no traits
+                client.addSystemPrompt(segmentPrompt);
+                return client.sendMedia(
+                  {
+                    data: base64,
+                    mimeType,
+                    name: item.displayName
+                  },
+                  undefined,
+                  model,
+                  (text) => appendStreamedOutput(item.id, text),
+                  { onlineSearch: false }
+                );
+              },
+              activeSource.name,
+              ocrModel,
+              activeSource.id,
+              null, // no fallback model for the cheap OCR stage
+              null,
+              2, // best effort: at most one retry, then fall back to single-pass
+              1500
+            );
+            questionTexts = parseSegmentResponse(ocrText);
+            console.log(
+              `OCR stage for ${item.id}: ${questionTexts?.length ?? 0} questions`
+            );
+          } catch (err) {
+            console.warn(
+              `OCR stage failed for ${item.id}, falling back:`,
+              err
+            );
+            questionTexts = null;
+          }
+        }
+
+        if (
+          questionTexts &&
+          questionTexts.length > 0 &&
+          questionTexts.length <= 8
+        ) {
+          // --- Stage 2: solve each question independently, in parallel ---
+          const solveOne = async (question: string): Promise<ProblemSolution> => {
+            const solveText = await sendWithRetry((model, sourceId) => {
+              const client = sourceId
+                ? getClientForSource(sourceId)
+                : getClientForSource(activeSource.id);
+              if (!client) {
+                throw new Error(t("errors.no-client"));
+              }
+              client.addSystemPrompt(solveSystemPrompt);
+              client.setAvailableTools(getEnabledToolCallingPrompts());
+              if (!client.sendChat) {
+                throw new Error(t("errors.no-client"));
+              }
+              return client.sendChat(
+                [
+                  {
+                    role: "user",
+                    content: `${t("two-stage.solve-instruction")}\n\n${question}`
+                  }
+                ],
+                model,
+                (text) => appendStreamedOutput(item.id, text),
+                { onlineSearch: onlineSearchEnabled }
+              );
+            });
+
+            const parsed = parseSolveResponse(solveText);
+            if (!parsed || parsed.problems.length === 0) {
+              throw new Error(t("errors.parsing-failed"));
+            }
+            return parsed.problems[0];
+          };
+
+          const solveConcurrency = Math.min(3, questionTexts.length);
+          const solved: ProblemSolution[] = new Array(questionTexts.length);
+          let nextQ = 0;
+          const solveWorker = async () => {
+            while (true) {
+              const i = nextQ++;
+              if (i >= questionTexts.length) break;
+              try {
+                solved[i] = await solveOne(questionTexts[i]);
+              } catch (err) {
+                solved[i] = {
+                  problem: t("errors.processing-failed.problem"),
+                  answer: t("errors.processing-failed.answer"),
+                  explanation: t("errors.processing-failed.explanation", {
+                    error: String(err)
+                  }),
+                  steps: []
+                };
+              }
+            }
+          };
+          await Promise.all(
+            Array(solveConcurrency)
+              .fill(0)
+              .map(() => solveWorker())
+          );
+          problems = solved;
+        }
+
+        // --- Fallback: single-pass full-page solve (PDF / text / OCR failure) ---
+        if (problems.length === 0) {
+          let resText = await sendImage(solveSystemPrompt);
+
+          let res = parseSolveResponse(resText);
+
+          // One format-repair pass instead of burning backoff on parse failures
+          if (!res || res.problems.length === 0) {
+            console.warn(
+              `Parse failed for ${item.id}, retrying with format hint`
+            );
+            resText = await sendImage(
+              solveSystemPrompt,
+              t("two-stage.fix-format")
+            );
+            res = parseSolveResponse(resText);
+            if (!res || res.problems.length === 0) {
+              throw new NonRetryableError(t("errors.parsing-failed"));
+            }
+          }
+
+          problems = res.problems ?? [];
         }
 
         updateSolution(item.id, {
           status: "success",
-          problems: res.problems ?? [],
+          problems,
           aiSourceId: activeSource.id
         });
 
@@ -502,12 +645,12 @@ ${traits}
               steps: []
             };
 
-            updateSolution(itemsToProcess[i].url, {
+            updateSolution(itemsToProcess[i].id, {
               status: "failed",
               problems: [failureProblem],
               aiSourceId: undefined
             });
-            clearStreamedOutput(itemsToProcess[i].url);
+            clearStreamedOutput(itemsToProcess[i].id);
 
             updateItemStatus(itemsToProcess[i].id, "failed");
           }

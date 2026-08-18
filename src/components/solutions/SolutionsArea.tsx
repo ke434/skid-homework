@@ -11,7 +11,20 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useProblemsStore } from "@/store/problems-store";
 import { useTranslation } from "react-i18next";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  FileCode2,
+  FileDown,
+  Loader2,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import {
   OrderedSolution,
   useSolutionExport,
@@ -76,8 +89,12 @@ export default function SolutionsArea() {
   ]);
 
   // 4. Export Logic
-  const { handleExportMarkdown, hasExportableContent } =
-    useSolutionExport(orderedSolutions);
+  const {
+    handleExportMarkdown,
+    handleExportWord,
+    isExportingWord,
+    hasExportableContent,
+  } = useSolutionExport(orderedSolutions);
 
   // 5. Image Navigation Handlers
   const handleNavigateImage = useCallback(
@@ -124,15 +141,41 @@ export default function SolutionsArea() {
     <Card className="rounded-2xl shadow" onKeyDown={handleGlobalKeyDown}>
       <CardHeader className="px-6 pb-0">
         <CardTitle className="text-lg font-semibold">{t("title")}</CardTitle>
-        <CardAction>
+        <CardAction className="flex items-center gap-2">
           <Button
             variant="outline"
             size="sm"
-            onClick={handleExportMarkdown}
-            disabled={!hasExportableContent}
+            onClick={handleExportWord}
+            disabled={!hasExportableContent || isExportingWord}
           >
-            {t("export.button")}
+            {isExportingWord ? (
+              <Loader2 className="mr-1.5 h-4 w-4 animate-spin" />
+            ) : (
+              <FileDown className="mr-1.5 h-4 w-4" />
+            )}
+            {isExportingWord ? t("export.word-exporting") : t("export.word-button")}
           </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={!hasExportableContent || isExportingWord}
+                aria-label={t("export.more-options")}
+              >
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={handleExportMarkdown}
+                disabled={!hasExportableContent}
+              >
+                <FileCode2 className="mr-2 h-4 w-4" />
+                {t("export.button")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </CardAction>
       </CardHeader>
 

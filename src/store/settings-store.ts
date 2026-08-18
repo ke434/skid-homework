@@ -65,6 +65,15 @@ export interface SettingsState {
 
   showOnlineSearchInScanner: boolean;
   setShowOnlineSearchInScanner: (state: boolean) => void;
+
+  // Two-stage scanning: fast OCR/segmentation first, then solve each
+  // question independently in parallel (much faster than one full-page pass).
+  twoStageEnabled: boolean;
+  setTwoStageEnabled: (state: boolean) => void;
+
+  // Fast model used for the OCR/segmentation stage. Empty = use currentModel.
+  fastModelName: string;
+  setFastModelName: (name: string) => void;
 }
 
 export const useSettingsStore = create<SettingsState>()(
@@ -82,6 +91,8 @@ export const useSettingsStore = create<SettingsState>()(
       onlineSearchEnabled: false,
       showModelSelectorInScanner: false,
       showOnlineSearchInScanner: false,
+      twoStageEnabled: true,
+      fastModelName: "",
 
       setImageEnhancement: (state) => set({ imageEnhancement: state }),
       setThemePreference: (theme) => set({ theme }),
@@ -120,6 +131,8 @@ export const useSettingsStore = create<SettingsState>()(
         set({ showModelSelectorInScanner: state }),
       setShowOnlineSearchInScanner: (state) =>
         set({ showOnlineSearchInScanner: state }),
+      setTwoStageEnabled: (state) => set({ twoStageEnabled: state }),
+      setFastModelName: (name) => set({ fastModelName: name }),
     }),
     {
       name: "skidhw-storage",
@@ -137,8 +150,10 @@ export const useSettingsStore = create<SettingsState>()(
         onlineSearchEnabled: state.onlineSearchEnabled,
         showModelSelectorInScanner: state.showModelSelectorInScanner,
         showOnlineSearchInScanner: state.showOnlineSearchInScanner,
+        twoStageEnabled: state.twoStageEnabled,
+        fastModelName: state.fastModelName,
       }),
-      version: 8,
+      version: 9,
       migrate: (persistedState, version) => {
         const data: Partial<SettingsState> & Record<string, unknown> =
           persistedState && typeof persistedState === "object"
@@ -172,6 +187,10 @@ export const useSettingsStore = create<SettingsState>()(
           showOnlineSearchInScanner:
             (data as { showOnlineSearchInScanner?: boolean })
               .showOnlineSearchInScanner ?? false,
+          twoStageEnabled:
+            (data as { twoStageEnabled?: boolean }).twoStageEnabled ?? true,
+          fastModelName:
+            (data as { fastModelName?: string }).fastModelName ?? "",
           devtoolsEnabled:
             (data as { devtoolsEnabled?: boolean }).devtoolsEnabled ??
             legacyDevtools ??

@@ -1,0 +1,4 @@
+# 把 REPLACE_YOUR_DOMAIN 换成你的域名（含 www 自动跳转）
+REPLACE_YOUR_DOMAIN, www.REPLACE_YOUR_DOMAIN {
+    reverse_proxy skidhw:3000
+}

@@ -309,6 +309,10 @@ interface Resources {
           "description": "Sending {{count}} file(s) to your AI sources...",
           "title": "Working..."
         }
+      },
+      "two-stage": {
+        "fix-format": "Your previous output could not be parsed. Please re-output ALL questions strictly following the required format: each question must have ### PROBLEM_TEXT, ### EXPLANATION (with #### Step N), and ### ANSWER sections, separated by ---PROBLEM_SEPARATOR---.",
+        "solve-instruction": "The following is one question recognized from an image. Solve ONLY this question and strictly follow the output format (### PROBLEM_TEXT / ### EXPLANATION / ### ANSWER)."
       }
     },
     "settings-page": {
@@ -401,6 +405,11 @@ interface Resources {
           "label": "When selected model is unavailable, fall back to",
           "none": "None"
         },
+        "fast-model": {
+          "desc": "A lightweight model used for the first recognition step, e.g. a faster model on your relay. Leave empty to use the same model as solving.",
+          "label": "Segmentation model (optional)",
+          "placeholder": "Leave empty to use the current model"
+        },
         "fetch": {
           "error": "Failed to fetch models for {{provider}}. Check your API key or base URL."
         },
@@ -423,7 +432,11 @@ interface Resources {
           "unknown": "Unknown model ({{name}})"
         },
         "show-selector-in-scanner": "Show model selector in scanner",
-        "title": "Model Configuration"
+        "title": "Model Configuration",
+        "two-stage": {
+          "desc": "Quickly recognizes the questions first, then solves each one independently in parallel - much faster than one full-page pass. Disable to fall back to the original full-page solve.",
+          "label": "Two-stage fast scanning (segment first, then solve in parallel)"
+        }
       },
       "openai": {
         "poll-interval": {
@@ -626,6 +639,7 @@ interface Resources {
         },
         "explanation-label": "Explanation",
         "filename-prefix": "homework-solutions",
+        "more-options": "More export options",
         "page-heading": "Page {{index}} · {{name}}",
         "placeholders": {
           "answer": "_No answer provided._",
@@ -637,6 +651,16 @@ interface Resources {
         "success": {
           "description": "Your solutions file is ready.",
           "title": "Markdown downloaded"
+        },
+        "word-button": "Export as Word (printable)",
+        "word-error": {
+          "description": "Something went wrong while creating the Word file.",
+          "title": "Word export failed"
+        },
+        "word-exporting": "Generating Word...",
+        "word-success": {
+          "description": "Each problem is an image you can resize and re-space in Word, then print directly.",
+          "title": "Word document downloaded"
         }
       },
       "file-label": "File {{fileName}} • {{source}}",

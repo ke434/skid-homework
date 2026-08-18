@@ -133,6 +133,10 @@
       "license": "Licensed under GPL-3.0.",
       "slogan": "Students' lives matter",
       "source": "Source code"
+    },
+    "two-stage": {
+      "solve-instruction": "The following is one question recognized from an image. Solve ONLY this question and strictly follow the output format (### PROBLEM_TEXT / ### EXPLANATION / ### ANSWER).",
+      "fix-format": "Your previous output could not be parsed. Please re-output ALL questions strictly following the required format: each question must have ### PROBLEM_TEXT, ### EXPLANATION (with #### Step N), and ### ANSWER sections, separated by ---PROBLEM_SEPARATOR---."
     }
   },
   "chat-page": {
@@ -204,6 +208,17 @@
     },
     "export": {
       "button": "Export as Markdown",
+      "word-button": "Export as Word (printable)",
+      "word-exporting": "Generating Word...",
+      "word-success": {
+        "title": "Word document downloaded",
+        "description": "Each problem is an image you can resize and re-space in Word, then print directly."
+      },
+      "word-error": {
+        "title": "Word export failed",
+        "description": "Something went wrong while creating the Word file."
+      },
+      "more-options": "More export options",
       "filename-prefix": "homework-solutions",
       "document-title": "Homework Solutions",
       "page-heading": "Page {{index}} · {{name}}",
@@ -453,6 +468,15 @@
         "label": "When selected model is unavailable, fall back to",
         "desc": "Automatically switch to this model when the primary model fails",
         "none": "None"
+      },
+      "two-stage": {
+        "label": "Two-stage fast scanning (segment first, then solve in parallel)",
+        "desc": "Quickly recognizes the questions first, then solves each one independently in parallel - much faster than one full-page pass. Disable to fall back to the original full-page solve."
+      },
+      "fast-model": {
+        "label": "Segmentation model (optional)",
+        "placeholder": "Leave empty to use the current model",
+        "desc": "A lightweight model used for the first recognition step, e.g. a faster model on your relay. Leave empty to use the same model as solving."
       }
     },
     "thinking": {

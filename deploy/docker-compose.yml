@@ -1,0 +1,21 @@
+services:
+  skidhw:
+    image: ghcr.io/cubewhy/skid-homework:sha-REPLACE_COMMIT_HASH
+    ports:
+      - "127.0.0.1:3000:3000"   # 只监听本机，由 Caddy 转发，不对外直接暴露
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
+  caddy_config:

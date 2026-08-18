@@ -133,6 +133,10 @@
       "license": "基于 GPL-3.0 许可发布。",
       "slogan": "学生的时间很宝贵",
       "source": "源代码"
+    },
+    "two-stage": {
+      "solve-instruction": "以下是图片中识别出的一道题目，请只解答这一道题，并严格按照输出格式（### PROBLEM_TEXT / ### EXPLANATION / ### ANSWER）输出。",
+      "fix-format": "你上一条输出的格式无法解析。请严格按照要求的格式重新输出全部题目：每个题目包含 ### PROBLEM_TEXT、### EXPLANATION（含 #### Step N）、### ANSWER 小节，多个题目之间用 ---PROBLEM_SEPARATOR--- 分隔。"
     }
   },
   "chat-page": {
@@ -204,6 +208,17 @@
     },
     "export": {
       "button": "导出为 Markdown",
+      "word-button": "导出为 Word（可打印）",
+      "word-exporting": "正在生成 Word...",
+      "word-success": {
+        "title": "Word 文档已下载",
+        "description": "每个题目是一张图片，可在 Word 中拖动调整大小和间距，然后直接打印。"
+      },
+      "word-error": {
+        "title": "Word 导出失败",
+        "description": "生成 Word 文档时出错，请重试。"
+      },
+      "more-options": "更多导出选项",
       "filename-prefix": "homework-solutions",
       "document-title": "作业解答汇总",
       "page-heading": "第 {{index}} 页 · {{name}}",
@@ -453,6 +468,15 @@
         "label": "当选择的模型不可用时，回落到",
         "desc": "当主模型请求失败时，自动切换到此模型重试",
         "none": "无"
+      },
+      "two-stage": {
+        "label": "两段式快速扫描（先分段识别，再并行解题）",
+        "desc": "先快速识别题目，再每道题独立并行求解，比整页一次求解快得多。关闭后回退为原来的整页求解。"
+      },
+      "fast-model": {
+        "label": "分段识别模型（可选）",
+        "placeholder": "留空则使用当前模型",
+        "desc": "用于第一步快速识别题目的轻量模型，例如您中转站上更快的模型。留空则与解题模型相同。"
       }
     },
     "thinking": {
