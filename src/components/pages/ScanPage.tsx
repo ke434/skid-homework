@@ -723,7 +723,7 @@ ${traits}
               asChild
             >
               <a
-                href="https://github.com/cubewhy/skid-homework/discussions"
+                href="https://github.com/ke434/skid-homework/discussions"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -824,12 +824,12 @@ ${traits}
               {t("footer.license")} {t("footer.slogan")}{" "}
               <a
                 className="underline"
-                href="https://github.com/cubewhy/skid-homework"
+                href="https://github.com/ke434/skid-homework"
                 target="_blank"
                 rel="noreferrer"
               >
                 {/* {t("footer.source")} */}
-                https://github.com/cubewhy/skid-homework
+                https://github.com/ke434/skid-homework
               </a>
             </p>
           </footer>

@@ -282,11 +282,11 @@ export default function InitPage() {
         <div className="opacity-80">
           {t("footer.notice")}{" "}
           <a
-            href="https://github.com/cubewhy/skid-homework"
+            href="https://github.com/ke434/skid-homework"
             className="underline"
           >
             {/* {t("footer.source")} */}
-            https://github.com/cubewhy/skid-homework
+            https://github.com/ke434/skid-homework
           </a>
         </div>
       </footer>

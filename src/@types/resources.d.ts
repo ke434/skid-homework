@@ -144,7 +144,7 @@ interface Resources {
         "telemetry": "No telemetry or spammy calls. Just the Gemini API."
       },
       "footer": {
-        "notice": "Licensed under GPLv3, created by cubewhy.",
+        "notice": "Licensed under GPLv3, created by ke434.",
         "source": "Source Code"
       },
       "form": {

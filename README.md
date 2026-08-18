@@ -1,62 +1,45 @@
-# 打滑作业平台
+# Skid-Homework｜智启高效学习新范式
+
+访问地址：**http://111.229.11.169:3000**
 
 [ENGLISH README](/README-EN.md)
 
-符合人体工程学设计、人工智能驱动的作业助手
+> 以技术重构学习流程，打造轻量化 AI 作业与错题管理云平台，让每一次练习，都成为能力跃升的基石。
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcubewhy%2Fskid-homework)
+## 平台简介
 
-## 和我们一起交流
+Skid-Homework 是面向学生、自学者打造的开源 AI 学习工作台：摒弃笨重客户端，纯浏览器运行、无需安装，注册登录即可获得作业解析、错题归档与知识复盘的一站式云端体验，把错题、习题、解题思路统一收纳，沉淀为你的个人数字学习知识库。
 
-我们有 Telegram 群组和 GitHub discussions
+平台不做简单的答案输出，而是聚焦思维引导——通过智能识别与分步解析，厘清解题逻辑、定位知识漏洞，告别机械抄题与低效刷题，形成“发现问题—分析错因—巩固强化”的完整学习闭环。
 
-可以使用下方链接加入
+## 核心能力亮点
 
-- [Telegram Group](https://t.me/earthsworth) (仅接受SFW内容)
-- [GitHub 讨论区](https://github.com/cubewhy/skid-homework/discussions)
+✅ **多源智能识别录入** — 图片 / PDF 拖拽上传，OCR 识别试题，快速导入习题与错题，告别手抄整理，高效归集学习素材。
 
-## 警告: 破坏性修改
+✅ **AI 深度解题推演** — 接入大模型，既可输出完整标准步骤，也可生成思路提示、启发式引导，适配自学、作业自查、错题复盘等场景，引导主动思考而非直接照搬答案。
 
-我们已经将服务迁移到 Next.js, 部署时请注意配置差异.
+✅ **云端错题本体系** — 错题云端存储、永久留存，随时调取复盘，精准定位薄弱知识点，沉淀个人错题库。
 
-## 安全提示
+✅ **极致流畅操作体验** — 完整快捷键体系、暗色模式、响应式布局；纯浏览器运行、无多余遥测，守护学习数据隐私。
 
-Skid-Homework 不会要求你下载桌面软件, 一切东西都在浏览器内运行
+✅ **轻量化架构** — 简洁高效、开箱即用，专注学习工具本质，去除冗余花哨功能，把算力留给真正的学习。
 
-如果某个站点要求你下载软件来使用本平台, 可能为病毒
+## 适合人群
 
-我们只有一个地址和一个仓库。
+🎓 中小学生：作业自查、错题整理，梳理知识漏洞
+📖 自学备考者：刷题复盘，沉淀个人习题知识库
+👨‍👩‍👧‍👦 家长辅导：辅助分析题目，引导孩子建立解题思维
 
-## 为什么用 打滑作业
+## 立即体验
 
-如果你觉得这个工具好用, 可以点一个Star 或者分享给你的朋友!
+🌐 访问地址：http://111.229.11.169:3000
+注册登录，开启你的专属错题本。
 
-- 节省时间, 高效工作流
-- 无遥测
-- 开源, 无黑盒
-- 无垃圾电话
-- 无需电话号码
-- 可通过电脑、平板电脑或手机访问
-- 人体工程学设计, 支持纯键盘操作
-- 可定制答案风格, 不局限于标准答案
-- 支持解析多张图片/PDF 文件
-- 左撇子友好
-- 支持输出图片 ([支持情况](#画图工具支持情况))
-- 支持本地持久化解析 (实验性, 若遇到问题请清空网页数据)
-- 墨水屏友好 (仅浅色模式, 如果配色方案有问题请开 issue)
-- ADB 截屏支持 (**实验性** 需要浏览器支持 WebUSB)
-
-## 现在尝试
-
-官方实例部署在 [https://skid.996every.day](https://skid.996every.day)
-
-您需要申请一个 Gemini API 密钥或者自备一个OpenAI 兼容API 才能访问 AI。
-
-[Google AI Studio](https://aistudio.google.com/api-keys)
+> 把重复交给工具，把思考留给自己。Skid-Homework，你的云端 AI 学习工作台。
 
 ## 默认快捷键说明
 
-> 注: 如果浏览器占用了某个快捷键或者感觉快捷键不顺手, 可以在 Skid-Homework 设置中进行修改!
+> 注: 如果浏览器占用了某个快捷键或者感觉快捷键不顺手, 可以在设置中进行修改!
 
 | 快捷键              | 说明                    |
 | ------------------- | ----------------------- |
@@ -97,9 +80,9 @@ LLM 响应耗费时间通常比题库长
 
 没有什么特别好的优化方法
 
-不过可以尝试缩小Thinking Budget, 太小的值可能会让AI 输出错误结果
+不过可以尝试缩小 Thinking Budget, 太小的值可能会让 AI 输出错误结果
 
-同时, 如果不需要详细的解析可以尝试如下prompt (Ctrl+X 提示词编辑器输入即可)
+同时, 如果不需要详细的解析可以尝试如下 prompt (Ctrl+X 提示词编辑器输入即可)
 
 ```text
 用中文输出答案
@@ -108,14 +91,14 @@ LLM 响应耗费时间通常比题库长
 
 ### 为什么总是失败
 
-- 检查API 是否放开了 Cors 限制
-- 检查你的IP 是否被服务商拉黑
-- 检查API Key 是否有效
+- 检查 API 是否放开了 Cors 限制
+- 检查你的 IP 是否被服务商拉黑
+- 检查 API Key 是否有效
 - 检查 Devtools (F12) 日志
 
 ### 我的电脑上没有摄像头, 请帮帮我
 
-我们支持ADB, 可以连接你的安卓手机进行屏幕截图, 需要浏览器支持 WebUSB
+我们支持 ADB, 可以连接你的安卓手机进行屏幕截图, 需要浏览器支持 WebUSB
 
 此过程在本地进行, 不会窃取隐私。
 
@@ -135,21 +118,21 @@ LLM 响应耗费时间通常比题库长
 
 Gemini API Key 是免费的, 可以去申请
 
-如果环境不允许没办法, 不过可以用Cloudflare 搞反向代理, 方法请自行查找
+如果环境不允许没办法, 不过可以用 Cloudflare 搞反向代理, 方法请自行查找
 
 ### 请求失败
 
-如果你的API 密钥和地址都正确的话, 大概率是 Cors 干的
+如果你的 API 密钥和地址都正确的话, 大概率是 Cors 干的
 
 这是浏览器的问题, 你可以尝试本地搭建反向代理.
 
-如果是其他问题请携带Devtools (F12) 日志开issue.
+如果是其他问题请携带 Devtools (F12) 日志开 issue.
 
 ### OCR 是怎么实现的
 
-现在站点会将图片直接发送给AI
+现在站点会将图片直接发送给 AI
 
-如果你有更好的方案请开pr/issues
+如果你有更好的方案请开 pr/issues
 
 ### 比传统软件(例如作业帮)强大在哪里
 
@@ -170,53 +153,29 @@ Gemini API Key 是免费的, 可以去申请
 
 功能如下
 
-- 查看原始Markdown
+- 查看原始 Markdown
 
 ### 我还有其他问题
 
-> 如果你发现了Bug, 请到 [issues](https://github.com/cubewhy/skid-homework/issues) 反馈, 否则请移步讨论区.
+> 如果你发现了 Bug, 请到 [issues](https://github.com/ke434/skid-homework/issues) 反馈, 否则请移步讨论区.
 
-请移步 [讨论区](https://github.com/cubewhy/skid-homework/discussions)
+请移步 [讨论区](https://github.com/ke434/skid-homework/discussions)
 
-## Star 历史记录
+## 和我们一起交流
 
-如果这个项目节省了你的时间, 请务必献上一个 Star!
+- [GitHub Issues](https://github.com/ke434/skid-homework/issues) (反馈 Bug、提出建议)
+- [GitHub 讨论区](https://github.com/ke434/skid-homework/discussions)
 
-<a href="https://star-history.dera.page/#cubewhy/skid-homework">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://star-history.dera.page/svg?repos=cubewhy/skid-homework&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://star-history.dera.page/svg?repos=cubewhy/skid-homework" />
-   <img alt="Star History Chart" src="https://star-history.dera.page/svg?repos=cubewhy/skid-homework" />
- </picture>
-</a>
+## 安全提示
 
-## 为什么太多作业不好
+本平台不会要求你下载任何桌面软件，一切功能都在浏览器内运行。
 
-- 浪费时间
-- 效率低下
-- 影响睡眠质量
-- 影响心理健康
+如果某个站点要求你下载软件来使用本平台，可能为病毒。
 
-## 觉得这违反了道德规范?
+我们只有一个地址和一个仓库：
 
-如果您这么认为，请不要使用它。
-
-家庭作业旨在帮助学生理解知识，
-而不是用来控制学生。
-
-我个人使用可汗学院和维基百科来学习，
-既省时又高效。
-
-但学校可能会要求我提交作业...
-这个平台只是解决这个问题的一个变通方法。
-
-### 免责声明
-
-本项目鼓励用户遵守学术诚信, 请勿在考试中使用本软件.
-
-若违规使用, 本项目不承担任何责任
-
-本项目使用 GPLv3 授权, 开发者无权控制软件的分发.
+- 地址：[http://111.229.11.169:3000](http://111.229.11.169:3000)
+- 仓库：[https://github.com/ke434/skid-homework](https://github.com/ke434/skid-homework)
 
 ## 开发
 
@@ -224,41 +183,34 @@ Gemini API Key 是免费的, 可以去申请
 - 运行 `pnpm i`
 - 运行 `pnpm run dev` 来预览
 
-欢迎PR
+欢迎 PR
 
-### 快速部署(使用Vercel)
+### 快速部署(使用 Vercel)
 
 请点击下方按钮
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcubewhy%2Fskid-homework)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fke434%2Fskid-homework)
 
-### 快速部署(使用Docker)
-
-```shell
-# Replace <commit_hash> with the actual commit hash
-docker run -p 3000:3000 ghcr.io/cubewhy/skid-homework:sha-<commit_hash>
-```
-
-```yaml
-services:
-  skidhw:
-    # Replace <commit_hash> with the actual commit hash
-    image: ghcr.io/cubewhy/skid-homework:sha-<commit_hash>
-    ports:
-      - 3000:3000
-```
-
-### 构建 Docker 映像
+### 构建 Docker 映像并运行
 
 容器开放 `3000` 端口.
 
 ```shell
 docker build -t skid-homework .
+docker run -p 3000:3000 skid-homework
+```
+
+```yaml
+services:
+  skidhw:
+    build: .
+    ports:
+      - 3000:3000
 ```
 
 ### I18N 类型报错
 
-请在修改i18n 文件之后运行如下命令更新类型
+请在修改 i18n 文件之后运行如下命令更新类型
 
 ```shell
 pnpx i18next-cli types
